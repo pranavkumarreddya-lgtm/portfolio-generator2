@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Portfolio Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        :root { --gold: #c5a059; --dark: #0f0f0f; --text: #333; }
+        body { margin: 0; font-family: 'Poppins', sans-serif; background: #000; color: white; overflow-x: hidden; }
+
+        /* METALLIC DOORS */
+        .door { position: fixed; top: 0; width: 50%; height: 100%; background: #1a1a1a; z-index: 200; transition: 1.5s cubic-bezier(0.7, 0, 0.3, 1); border: 2px solid #333; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 50px #000; }
+        .left-door { left: 0; border-right: 4px solid var(--gold); }
+        .right-door { right: 0; border-left: 4px solid var(--gold); }
+        .open .left-door { transform: translateX(-100%); z-index: -1; }
+        .open .right-door { transform: translateX(100%); z-index: -1; }
+
+        /* AUTH CARD */
+        .auth-card { position: fixed; z-index: 210; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #111; padding: 40px; border-radius: 20px; border: 1px solid var(--gold); text-align: center; width: 320px; transition: 0.5s; }
+        .open .auth-card { opacity: 0; visibility: hidden; }
+
+        /* MAIN CONTAINER */
+        .container { display: none; padding: 50px 20px; max-width: 1100px; margin: 0 auto; z-index: 10; position: relative; }
+        .open .container { display: block; }
+
+        /* FORM STYLE */
+        .input-group { background: #1a1a1a; padding: 30px; border-radius: 15px; border: 1px solid #333; margin-bottom: 50px; }
+        input, textarea { width: 100%; padding: 15px; margin: 10px 0; background: #000; border: 1px solid #333; color: white; border-radius: 8px; font-family: 'Poppins'; box-sizing: border-box; }
+        .btn { background: var(--gold); color: #000; border: none; padding: 15px 30px; border-radius: 8px; font-weight: 800; cursor: pointer; width: 100%; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* FULL PAGE PORTFOLIO DESIGN */
+        .portfolio-page { background: white; color: var(--text); padding: 0; border-radius: 0; width: 100%; min-height: 1000px; display: flex; flex-direction: column; box-shadow: 0 0 50px rgba(0,0,0,0.5); }
+        .p-header { background: #1a1a1a; color: white; padding: 60px; display: flex; align-items: center; gap: 40px; border-bottom: 8px solid var(--gold); }
+        .p-img { width: 220px; height: 220px; border-radius: 50%; border: 5px solid var(--gold); object-fit: cover; background: #333; }
+        .p-info h1 { margin: 0; font-size: 50px; text-transform: uppercase; letter-spacing: 5px; }
+        .p-info p { margin: 5px 0; font-size: 20px; color: var(--gold); font-weight: 600; }
+
+        .p-body { display: grid; grid-template-columns: 1fr 2fr; gap: 50px; padding: 60px; background: white; }
+        .side-col h2 { color: #000; border-bottom: 3px solid var(--gold); display: inline-block; margin-bottom: 20px; }
+        .main-col h2 { color: #000; border-left: 8px solid var(--gold); padding-left: 15px; margin-bottom: 20px; }
+        
+        .skill-tag { background: #f0f0f0; padding: 8px 15px; border-radius: 5px; display: inline-block; margin: 5px; font-weight: 600; font-size: 14px; }
+        .project-item { margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
+    </style>
+</head>
+<body id="master-body">
+
+    <div class="door left-door"></div>
+    <div class="door right-door"></div>
+
+    <div class="auth-card">
+        <h2 style="color:var(--gold)">AUTHENTICATION</h2>
+        <input type="text" id="user" placeholder="USERNAME">
+        <div id="cap" style="background:#000; color:var(--gold); padding:10px; margin:10px 0; letter-spacing:8px; font-weight:800; border:1px dashed var(--gold);"></div>
+        <input type="text" id="cap-in" placeholder="CAPTCHA">
+        <button class="btn" onclick="unlock()">UNLOCK SYSTEM</button>
+    </div>
+
+    <div class="container">
+        <div class="input-group" id="form-ui">
+            <h2 style="color:var(--gold); margin-top:0;">CREATIVE GENERATOR</h2>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+                <input type="text" id="fn" placeholder="Your Full Name">
+                <input type="text" id="fr" placeholder="Your Designation">
+                <input type="file" id="fi" accept="image/*" onchange="preview(event)">
+            </div>
+            <textarea id="fs" rows="2" placeholder="Skills (comma separated)"></textarea>
+            <textarea id="fab" rows="3" placeholder="Short About Summary..."></textarea>
+            <textarea id="fpj" rows="5" placeholder="Projects (Name: Description)"></textarea>
+            <button class="btn" onclick="generate()">GENERATE FULL-PAGE PORTFOLIO ✨</button>
+        </div>
+
+        <div id="result-ui" style="display:none; padding-bottom:100px;">
+            <div id="pdf-area" class="portfolio-page">
+                <div class="p-header">
+                    <img id="res-img" class="p-img" src="">
+                    <div class="p-info">
+                        <h1 id="res-name">ALETI PRANAV</h1>
+                        <p id="res-role">SOFTWARE DEVELOPER</p>
+                    </div>
+                </div>
+                <div class="p-body">
+                    <div class="side-col">
+                        <h2>SKILLS</h2>
+                        <div id="res-skills"></div>
+                        <h2 style="margin-top:40px;">CONTACT</h2>
+                        <p style="font-size:14px;">📍 Hyderabad, TS<br>📧 Secure Terminal<br>🔗 JNTUH R22</p>
+                    </div>
+                    <div class="main-col">
+                        <h2>PROFILE SUMMARY</h2>
+                        <p id="res-about" style="line-height:1.8; font-size:15px; color:#555;"></p>
+                        <h2 style="margin-top:40px;">FEATURED PROJECTS</h2>
+                        <div id="res-projects" style="white-space:pre-line; line-height:1.8; font-size:15px; color:#555;"></div>
+                    </div>
+                </div>
+            </div>
+            <button class="btn" onclick="savePdf()" style="margin-top:30px; background:#2ecc71;">DOWNLOAD PROFESSIONAL PDF 📄</button>
+        </div>
+    </div>
+
+    <script>
+        let code = Math.random().toString(36).substring(2, 8).toUpperCase();
+        document.getElementById('cap').innerText = code;
+
+        function unlock() {
+            if(document.getElementById('user').value && document.getElementById('cap-in').value.toUpperCase() === code) {
+                document.getElementById('master-body').classList.add('open');
+            } else { alert("Access Denied!"); }
+        }
+
+        let imgData = "";
+        function preview(e) {
+            const r = new FileReader();
+            r.onload = () => imgData = r.result;
+            r.readAsDataURL(e.target.files[0]);
+        }
+
+        function generate() {
+            document.getElementById('res-name').innerText = document.getElementById('fn').value.toUpperCase();
+            document.getElementById('res-role').innerText = document.getElementById('fr').value.toUpperCase();
+            document.getElementById('res-about').innerText = document.getElementById('fab').value;
+            document.getElementById('res-projects').innerText = document.getElementById('fpj').value;
+            
+            const skills = document.getElementById('fs').value.split(',');
+            const sDiv = document.getElementById('res-skills');
+            sDiv.innerHTML = "";
+            skills.forEach(s => sDiv.innerHTML += `<span class="skill-tag">${s.trim()}</span>`);
+
+            if(imgData) document.getElementById('res-img').src = imgData;
+            
+            document.getElementById('form-ui').style.display = 'none';
+            document.getElementById('result-ui').style.display = 'block';
+        }
+
+        function savePdf() {
+            const e = document.getElementById('pdf-area');
+            const opt = { margin: 0, filename: 'Pranav_Elite_Portfolio.pdf', image: { type: 'jpeg', quality: 1 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } };
+            html2pdf().set(opt).from(e).save();
+        }
+    </script>
+</body>
+</html>
