@@ -3,40 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elite 2-Page Portfolio Generator</title>
+    <title>Elite 2-Page Portfolio | Nexus</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        :root { --gold: #c5a059; --dark: #121212; --text: #333; }
-        body { margin: 0; font-family: 'Poppins', sans-serif; background: #000; color: white; }
+        :root { --gold: #c5a059; --bg: #0a0a0a; --text: #333; }
+        body { margin: 0; font-family: 'Poppins', sans-serif; background: var(--bg); color: white; overflow-x: hidden; }
 
-        /* DOORS & AUTH (Same as before) */
-        .door { position: fixed; top: 0; width: 50%; height: 100%; background: #1a1a1a; z-index: 200; transition: 1.5s ease-in-out; border: 2px solid #333; }
+        /* METALLIC DOORS */
+        .door { position: fixed; top: 0; width: 50%; height: 100%; background: #151515; z-index: 200; transition: 1.5s cubic-bezier(0.7, 0, 0.3, 1); border: 1px solid #222; }
         .left-door { left: 0; border-right: 4px solid var(--gold); }
         .right-door { right: 0; border-left: 4px solid var(--gold); }
         .open .left-door { transform: translateX(-100%); z-index: -1; }
         .open .right-door { transform: translateX(100%); z-index: -1; }
-        .auth-card { position: fixed; z-index: 210; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #111; padding: 40px; border-radius: 20px; border: 1px solid var(--gold); text-align: center; width: 320px; }
+
+        /* AUTH CARD (Fixed Captcha UI) */
+        .auth-card { position: fixed; z-index: 210; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #111; padding: 35px; border-radius: 20px; border: 1px solid var(--gold); text-align: center; width: 300px; transition: 0.5s; box-shadow: 0 0 30px rgba(0,0,0,1); }
         .open .auth-card { opacity: 0; visibility: hidden; }
+        #cap-box { background: #000; color: var(--gold); padding: 10px; margin: 15px 0; letter-spacing: 10px; font-weight: 800; border: 1px dashed var(--gold); font-size: 22px; }
 
-        /* FORM */
-        .container { display: none; padding: 50px 20px; max-width: 1000px; margin: 0 auto; position: relative; z-index: 10; }
+        /* INPUTS */
+        .container { display: none; padding: 40px 20px; max-width: 900px; margin: 0 auto; position: relative; z-index: 10; }
         .open .container { display: block; }
-        input, textarea { width: 100%; padding: 12px; margin: 8px 0; background: #000; border: 1px solid #333; color: white; border-radius: 5px; font-family: 'Poppins'; }
-        .btn { background: var(--gold); color: #000; border: none; padding: 15px; border-radius: 5px; font-weight: 800; cursor: pointer; width: 100%; text-transform: uppercase; margin-top: 10px; }
+        input, textarea { width: 100%; padding: 12px; margin: 8px 0; background: #000; border: 1px solid #333; color: white; border-radius: 8px; font-family: 'Poppins'; box-sizing: border-box; }
+        .btn { background: var(--gold); color: #000; border: none; padding: 15px; border-radius: 8px; font-weight: 800; cursor: pointer; width: 100%; text-transform: uppercase; margin-top: 15px; }
 
-        /* 2-PAGE PORTFOLIO DESIGN */
-        .portfolio-wrapper { background: #555; padding: 20px; display: flex; flex-direction: column; gap: 40px; align-items: center; }
+        /* 2-PAGE DESIGN */
+        .portfolio-wrapper { background: #333; padding: 40px 0; display: flex; flex-direction: column; gap: 50px; align-items: center; }
         .page { background: white; color: var(--text); width: 210mm; min-height: 297mm; padding: 20mm; box-sizing: border-box; box-shadow: 0 0 20px rgba(0,0,0,0.5); position: relative; }
         
-        .header { border-bottom: 5px solid var(--gold); padding-bottom: 30px; display: flex; align-items: center; gap: 30px; }
-        .profile-img { width: 180px; height: 180px; border-radius: 50%; border: 4px solid var(--gold); object-fit: cover; }
-        .header-text h1 { margin: 0; font-size: 35px; color: #000; }
-        .contact-info { margin-top: 10px; font-size: 13px; color: #666; display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+        .header { border-bottom: 6px solid var(--gold); padding-bottom: 30px; display: flex; align-items: center; gap: 40px; margin-bottom: 30px; }
+        .profile-img { width: 200px; height: 200px; border-radius: 50%; border: 5px solid var(--gold); object-fit: cover; background: #eee; }
+        .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 13px; color: #555; margin-top: 15px; }
 
-        h2 { color: #000; border-left: 5px solid var(--gold); padding-left: 15px; text-transform: uppercase; font-size: 20px; margin-top: 30px; }
-        .content-box { line-height: 1.6; font-size: 14px; text-align: justify; }
-        .footer-page { position: absolute; bottom: 20mm; right: 20mm; font-size: 12px; color: #aaa; }
+        h2 { color: #000; border-left: 8px solid var(--gold); padding-left: 15px; text-transform: uppercase; font-size: 22px; margin-top: 40px; margin-bottom: 15px; }
+        .content-box { line-height: 1.8; font-size: 15px; text-align: justify; color: #444; }
+        .footer-num { position: absolute; bottom: 15mm; right: 20mm; font-weight: bold; color: var(--gold); }
     </style>
 </head>
 <body id="master">
@@ -44,93 +46,117 @@
     <div class="door left-door"></div>
     <div class="door right-door"></div>
 
-    <div class="auth-card">
-        <h2 style="color:var(--gold)">AUTHENTICATION</h2>
-        <input type="text" id="u" placeholder="USERNAME">
-        <input type="text" id="c-in" placeholder="CAPTCHA">
-        <button class="btn" onclick="unlock()">LOGIN</button>
+    <div class="auth-card" id="auth-box">
+        <h2 style="color:var(--gold); margin:0;">SYSTEM LOGIN</h2>
+        <input type="text" id="uname" placeholder="USERNAME">
+        <div id="cap-box"></div> <input type="text" id="cap-in" placeholder="TYPE CAPTCHA">
+        <button class="btn" onclick="verify()">UNLOCK SYSTEM 🔓</button>
     </div>
 
     <div class="container">
-        <div style="background:#1a1a1a; padding:30px; border-radius:15px; border:1px solid #333;">
-            <h2 style="color:var(--gold); border:none; padding:0;">SYSTEM DETAILS</h2>
+        <div style="background:#111; padding:30px; border-radius:15px; border:1px solid #333;">
+            <h2 style="color:var(--gold); border:none; padding:0;">PORTFOLIO BUILDER</h2>
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
                 <input type="text" id="fn" placeholder="Full Name">
-                <input type="text" id="fr" placeholder="Role">
-                <input type="text" id="f-ph" placeholder="Phone Number">
-                <input type="email" id="f-em" placeholder="Email Address">
-                <input type="text" id="f-li" placeholder="LinkedIn URL">
-                <input type="file" id="fi" accept="image/*" onchange="prev(event)">
+                <input type="text" id="fr" placeholder="Role (e.g. Developer)">
+                <input type="text" id="fph" placeholder="Phone Number">
+                <input type="email" id="fem" placeholder="Email Address">
+                <input type="text" id="fli" placeholder="LinkedIn Profile URL">
+                <input type="file" id="fimg" accept="image/*" onchange="preview(event)">
             </div>
-            <textarea id="fab" rows="3" placeholder="About Me (Page 1)"></textarea>
-            <textarea id="fpj" rows="5" placeholder="Main Projects (Page 1)"></textarea>
-            <textarea id="f-extra" rows="5" placeholder="Certifications & Extra Projects (Page 2)"></textarea>
-            <button class="btn" onclick="generate()">GENERATE 2-PAGE PORTFOLIO ✨</button>
+            <textarea id="fab" rows="3" placeholder="Summary (Page 1)"></textarea>
+            <textarea id="fpj" rows="5" placeholder="Projects (Page 1)"></textarea>
+            <textarea id="fex" rows="5" placeholder="Certifications & Page 2 Content"></textarea>
+            <button class="btn" onclick="generate()">GENERATE 2-PAGE PDF ✨</button>
         </div>
 
-        <div id="res-ui" style="display:none; margin-top:50px;">
-            <div id="pdf-wrap" class="portfolio-wrapper">
+        <div id="res-ui" style="display:none; margin-top:50px; padding-bottom: 100px;">
+            <div id="pdf-area" class="portfolio-wrapper">
                 <div class="page">
                     <div class="header">
                         <img id="res-img" class="profile-img" src="">
-                        <div class="header-text">
-                            <h1 id="res-name"></h1>
-                            <p id="res-role" style="color:var(--gold); font-weight:bold;"></p>
-                            <div class="contact-info">
+                        <div style="flex:1;">
+                            <h1 id="res-name" style="margin:0; font-size:38px; color:#000;"></h1>
+                            <p id="res-role" style="color:var(--gold); font-weight:800; font-size:18px; margin:5px 0;"></p>
+                            <div class="contact-grid">
                                 <span>📞 <span id="res-ph"></span></span>
                                 <span>📧 <span id="res-em"></span></span>
                                 <span style="grid-column: span 2;">🔗 <span id="res-li"></span></span>
                             </div>
                         </div>
                     </div>
-                    <h2>Professional Summary</h2>
+                    <h2>About Me</h2>
                     <p id="res-ab" class="content-box"></p>
-                    <h2>Key Projects</h2>
+                    <h2>Featured Projects</h2>
                     <p id="res-pj" class="content-box" style="white-space:pre-line;"></p>
-                    <div class="footer-page">Page 1</div>
+                    <div class="footer-num">PAGE 01</div>
                 </div>
 
                 <div class="page">
-                    <h2>Certifications & Achievements</h2>
+                    <h2>Certifications & Skills</h2>
                     <p id="res-ex" class="content-box" style="white-space:pre-line;"></p>
-                    <div style="margin-top:50px;">
-                        <h2>Technical Skills</h2>
-                        <p>Core: Python, Java, C++<br>Web: HTML5, CSS3, JavaScript, React<br>Tools: Git, VS Code, PyCharm</p>
+                    <div style="margin-top:50px; background:#f9f9f9; padding:30px; border-radius:10px;">
+                        <h2 style="margin-top:0;">Technical Expertise</h2>
+                        <ul style="line-height:2; font-weight:600;">
+                            <li>Core Development: Python, Java, SQL</li>
+                            <li>Frontend: HTML5, CSS3, JavaScript (ES6+)</li>
+                            <li>Architecture: 3D Web UI, Autonomous Systems</li>
+                        </ul>
                     </div>
-                    <div class="footer-page">Page 2</div>
+                    <div class="footer-num">PAGE 02</div>
                 </div>
             </div>
-            <button class="btn" onclick="save()" style="background:#2ecc71; margin: 40px 0;">DOWNLOAD 2-PAGE PDF 📄</button>
+            <button class="btn" onclick="save()" style="background:#2ecc71; margin-top:40px;">DOWNLOAD 2-PAGE PDF 📄</button>
         </div>
     </div>
 
     <script>
-        function unlock() { document.getElementById('master').classList.add('open'); }
-        
-        let iData = "";
-        function prev(e) {
+        // CAPTCHA GENERATION
+        let code = Math.random().toString(36).substring(2, 8).toUpperCase();
+        document.getElementById('cap-box').innerText = code;
+
+        function verify() {
+            const u = document.getElementById('uname').value;
+            const c = document.getElementById('cap-in').value.toUpperCase();
+            if(u && c === code) {
+                document.getElementById('master').classList.add('open');
+            } else {
+                alert("Auth Failed! Check Name/Captcha.");
+                code = Math.random().toString(36).substring(2, 8).toUpperCase();
+                document.getElementById('cap-box').innerText = code;
+            }
+        }
+
+        let imgData = "";
+        function preview(e) {
             const r = new FileReader();
-            r.onload = () => iData = r.result;
+            r.onload = () => imgData = r.result;
             r.readAsDataURL(e.target.files[0]);
         }
 
         function generate() {
             document.getElementById('res-name').innerText = document.getElementById('fn').value.toUpperCase();
             document.getElementById('res-role').innerText = document.getElementById('fr').value;
-            document.getElementById('res-ph').innerText = document.getElementById('f-ph').value;
-            document.getElementById('res-em').innerText = document.getElementById('f-em').value;
-            document.getElementById('res-li').innerText = document.getElementById('f-li').value;
+            document.getElementById('res-ph').innerText = document.getElementById('fph').value;
+            document.getElementById('res-em').innerText = document.getElementById('fem').value;
+            document.getElementById('res-li').innerText = document.getElementById('fli').value;
             document.getElementById('res-ab').innerText = document.getElementById('fab').value;
             document.getElementById('res-pj').innerText = document.getElementById('fpj').value;
-            document.getElementById('res-ex').innerText = document.getElementById('f-extra').value;
-
-            if(iData) document.getElementById('res-img').src = iData;
+            document.getElementById('res-ex').innerText = document.getElementById('fex').value;
+            if(imgData) document.getElementById('res-img').src = imgData;
+            
             document.getElementById('res-ui').style.display = 'block';
+            window.scrollTo(0, document.body.scrollHeight);
         }
 
         function save() {
-            const e = document.getElementById('pdf-wrap');
-            const opt = { margin: 0, filename: 'Portfolio_2Page.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
+            const e = document.getElementById('pdf-area');
+            const opt = { 
+                margin: 0, 
+                filename: 'Pranav_Elite_Portfolio.pdf', 
+                html2canvas: { scale: 2, useCORS: true }, 
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } 
+            };
             html2pdf().from(e).set(opt).save();
         }
     </script>
