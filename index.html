@@ -1,111 +1,151 @@
-        <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus Multi-Portfolio Suite</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <title>NEXUS AI | Multi-Template Suite</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&family=Orbitron:wght@400;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        :root { --gold: #c5a059; --bg: #0a0a0a; }
+        :root { --gold: #c5a059; --accent: #00d2ff; --bg: #050505; }
         body { margin: 0; font-family: 'Poppins', sans-serif; background: var(--bg); color: white; overflow-x: hidden; }
 
-        /* SIDEBAR STYLES */
-        .sidebar { position: fixed; left: -280px; top: 0; width: 250px; height: 100%; background: #111; z-index: 300; transition: 0.4s; padding: 20px; border-right: 1px solid var(--gold); }
-        .sidebar.active { left: 0; }
-        .menu-btn { position: fixed; top: 20px; left: 20px; z-index: 310; cursor: pointer; display: none; }
+        /* LOADING & DOORS */
+        .door { position: fixed; top: 0; width: 50%; height: 100%; background: #111; z-index: 500; transition: 1.5s cubic-bezier(0.7, 0, 0.3, 1); border: 1px solid #222; }
+        .left-door { left: 0; border-right: 3px solid var(--gold); }
+        .right-door { right: 0; border-left: 3px solid var(--gold); }
+        .open .left-door { transform: translateX(-100%); }
+        .open .right-door { transform: translateX(100%); }
+
+        /* AUTH BOX */
+        .auth-card { position: fixed; z-index: 510; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(20,20,20,0.9); padding: 40px; border-radius: 20px; border: 1px solid var(--gold); text-align: center; width: 320px; backdrop-filter: blur(10px); }
+        .open .auth-card { display: none; }
+        #cap-box { background: #000; color: var(--gold); padding: 10px; margin: 15px 0; letter-spacing: 10px; font-weight: 800; border: 1px dashed var(--gold); font-size: 24px; }
+
+        /* GREETING SCREEN */
+        #welcome-screen { position: fixed; top:0; left:0; width:100%; height:100%; display:none; flex-direction:column; align-items:center; justify-content:center; background: #000; z-index: 400; }
+        .greet-text { font-family: 'Orbitron'; font-size: 5vw; color: var(--gold); text-transform: uppercase; letter-spacing: 10px; opacity: 0; transform: translateY(20px); }
+
+        /* SIDEBAR (3 LINES) */
+        .menu-btn { position: fixed; top: 25px; left: 25px; z-index: 600; cursor: pointer; display: none; }
         .open .menu-btn { display: block; }
         .menu-btn div { width: 30px; height: 3px; background: var(--gold); margin: 6px 0; transition: 0.4s; }
+        .sidebar { position: fixed; left: -300px; top: 0; width: 280px; height: 100%; background: rgba(10,10,10,0.95); z-index: 550; transition: 0.5s; padding: 100px 30px; border-right: 1px solid var(--gold); backdrop-filter: blur(15px); }
+        .sidebar.active { left: 0; }
 
-        /* DOORS & AUTH */
-        .door { position: fixed; top: 0; width: 50%; height: 100%; background: #151515; z-index: 200; transition: 1.5s ease-in-out; border: 1px solid #222; }
-        .left-door { left: 0; border-right: 4px solid var(--gold); }
-        .right-door { right: 0; border-left: 4px solid var(--gold); }
-        .open .left-door { transform: translateX(-100%); z-index: -1; }
-        .open .right-door { transform: translateX(100%); z-index: -1; }
-        
-        .auth-card { position: fixed; z-index: 210; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #111; padding: 30px; border-radius: 20px; border: 1px solid var(--gold); text-align: center; width: 280px; }
-        .open .auth-card { opacity: 0; visibility: hidden; }
-
-        /* CONTENT */
-        .container { display: none; padding: 80px 20px; max-width: 900px; margin: 0 auto; }
+        /* PORTFOLIO CONTENT */
+        .container { display: none; padding: 100px 20px; max-width: 1000px; margin: 0 auto; position: relative; z-index: 10; }
         .open .container { display: block; }
-        
-        /* TEMPLATE STYLES */
-        .page { background: white; color: #333; width: 210mm; min-height: 297mm; padding: 20mm; margin: 20px auto; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
-        
-        /* THEME 2: Modern Creative */
-        .modern-theme { border-top: 20px solid #2c3e50; }
-        /* THEME 3: Cyber Dark */
-        .cyber-theme { background: #000; color: #00ff00; font-family: 'Orbitron', sans-serif; border: 2px solid #00ff00; }
 
-        input, textarea, select { width: 100%; padding: 12px; margin: 8px 0; background: #000; border: 1px solid #333; color: white; border-radius: 5px; }
-        .btn { background: var(--gold); color: #000; border: none; padding: 15px; border-radius: 5px; font-weight: 800; cursor: pointer; width: 100%; }
+        input, textarea { width: 100%; padding: 12px; margin: 8px 0; background: #111; border: 1px solid #333; color: white; border-radius: 5px; }
+        .btn { background: var(--gold); color: black; border: none; padding: 15px; border-radius: 5px; font-weight: 800; cursor: pointer; width: 100%; text-transform: uppercase; margin-top: 15px; transition: 0.3s; }
+        .btn:hover { background: white; box-shadow: 0 0 20px var(--gold); }
+
+        /* TEMPLATE PAGES */
+        .page { background: white; color: #333; width: 210mm; min-height: 297mm; padding: 20mm; margin: 20px auto; box-shadow: 0 0 40px rgba(0,0,0,0.5); }
+        .cyber-theme { background: #000; color: #00ff00; font-family: 'Orbitron'; border: 3px solid #00ff00; }
     </style>
 </head>
 <body id="master">
 
-    <div class="menu-btn" onclick="toggleSidebar()">
-        <div></div><div></div><div></div>
-    </div>
+    <div class="menu-btn" onclick="toggleSidebar()"><div></div><div></div><div></div></div>
+    
     <div class="sidebar" id="sidebar">
-        <h3 style="color:var(--gold)">SELECT DESIGN</h3>
-        <button class="btn" onclick="setTemplate('classic')" style="margin-bottom:10px;">Classic Professional</button>
-        <button class="btn" onclick="setTemplate('modern')" style="margin-bottom:10px;">Modern Creative</button>
-        <button class="btn" onclick="setTemplate('cyber')">Cyber Dark</button>
+        <h2 style="color:var(--gold); border-bottom:1px solid #333; padding-bottom:10px;">DESIGNER HUB</h2>
+        <p style="font-size:12px; color:#666;">Select your vibe:</p>
+        <button class="btn" onclick="setTemp('classic')">Classic Professional</button>
+        <button class="btn" onclick="setTemp('modern')" style="background:#fff;">Modern Creative</button>
+        <button class="btn" onclick="setTemp('cyber')" style="background:#00ff00;">Cyber Matrix</button>
     </div>
 
     <div class="door left-door"></div>
     <div class="door right-door"></div>
 
     <div class="auth-card">
-        <h2 style="color:var(--gold)">AUTHENTICATION</h2>
-        <input type="text" id="uname" placeholder="USERNAME">
-        <button class="btn" onclick="unlock()">LOGIN</button>
+        <h2 style="color:var(--gold); letter-spacing:3px;">IDENTIFY USER</h2>
+        <input type="text" id="username" placeholder="NAME">
+        <div id="cap-box"></div>
+        <input type="text" id="captcha-input" placeholder="ENTER CAPTCHA">
+        <button class="btn" onclick="verify()">INITIALIZE NEXUS ⚡</button>
+    </div>
+
+    <div id="welcome-screen">
+        <div class="greet-text" id="greet">WELCOME AGENT</div>
     </div>
 
     <div class="container">
-        <div id="setup-form" style="background:#1a1a1a; padding:30px; border-radius:15px; border:1px solid #333;">
-            <h2 id="current-temp-text" style="color:var(--gold)">CURRENT: CLASSIC</h2>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+        <div style="background:rgba(20,20,20,0.8); padding:30px; border-radius:15px; border:1px solid #333; backdrop-filter:blur(10px);">
+            <h2 id="mode-text" style="color:var(--gold); margin:0;">MODE: CLASSIC</h2>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-top:20px;">
                 <input type="text" id="fn" placeholder="Full Name">
-                <input type="text" id="fr" placeholder="Role">
-                <input type="file" id="fi" onchange="prev(event)">
+                <input type="text" id="fr" placeholder="Current Role">
+                <input type="text" id="fph" placeholder="Phone">
+                <input type="email" id="fem" placeholder="Email">
+                <input type="text" id="fli" placeholder="LinkedIn URL">
+                <input type="file" id="fimg" onchange="prev(event)">
             </div>
-            <textarea id="fab" rows="3" placeholder="Summary"></textarea>
-            <textarea id="fpj" rows="5" placeholder="Projects"></textarea>
-            <button class="btn" onclick="generate()">GENERATE SELECTED PORTFOLIO ✨</button>
+            <textarea id="fab" rows="3" placeholder="Summary..."></textarea>
+            <textarea id="fpj" rows="5" placeholder="Projects..."></textarea>
+            <button class="btn" onclick="generate()">GENERATE PORTFOLIO ✨</button>
         </div>
 
         <div id="res-ui" style="display:none; margin-top:50px;">
-            <div id="pdf-area">
-                <div id="main-page" class="page">
-                    <div id="header-section" style="display:flex; align-items:center; gap:20px; border-bottom:2px solid #eee; padding-bottom:20px;">
-                        <img id="res-img" style="width:150px; height:150px; border-radius:50%; object-fit:cover;">
+            <div id="pdf-area" style="background:#222; padding:20px;">
+                <div id="page1" class="page">
+                    <div style="display:flex; align-items:center; gap:30px; border-bottom:4px solid var(--gold); padding-bottom:20px;">
+                        <img id="res-img" style="width:180px; height:180px; border-radius:50%; object-fit:cover; border:3px solid var(--gold);">
                         <div>
-                            <h1 id="res-name" style="margin:0;"></h1>
-                            <p id="res-role" style="font-weight:bold;"></p>
+                            <h1 id="res-name" style="margin:0; font-size:40px;"></h1>
+                            <p id="res-role" style="font-weight:bold; color:var(--gold);"></p>
                         </div>
                     </div>
+                    <h2>CONTACT</h2>
+                    <p id="res-contact"></p>
                     <h2>ABOUT</h2>
                     <p id="res-ab" style="line-height:1.6;"></p>
                     <h2>PROJECTS</h2>
                     <p id="res-pj" style="white-space:pre-line; line-height:1.6;"></p>
                 </div>
             </div>
-            <button class="btn" onclick="savePdf()" style="background:#2ecc71; margin-bottom:50px;">DOWNLOAD PDF 📄</button>
+            <button class="btn" onclick="save()" style="background:#2ecc71; margin-bottom:100px;">DOWNLOAD 2-PAGE PDF 📄</button>
         </div>
     </div>
 
     <script>
-        let selectedTheme = 'classic';
+        let code = Math.random().toString(36).substring(2, 7).toUpperCase();
+        document.getElementById('cap-box').innerText = code;
+        let theme = 'classic';
+
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
-        function unlock() { document.getElementById('master').classList.add('open'); }
-        
-        function setTemplate(type) {
-            selectedTheme = type;
-            document.getElementById('current-temp-text').innerText = "CURRENT: " + type.toUpperCase();
-            toggleSidebar();
+        function setTemp(t) { theme = t; document.getElementById('mode-text').innerText = "MODE: " + t.toUpperCase(); toggleSidebar(); }
+
+        function verify() {
+            const name = document.getElementById('username').value;
+            const cap = document.getElementById('captcha-input').value.toUpperCase();
+            if(name && cap === code) {
+                document.getElementById('master').classList.add('open');
+                showWelcome(name);
+            } else { alert("Verification Failed!"); }
+        }
+
+        function showWelcome(name) {
+            const screen = document.getElementById('welcome-screen');
+            const greet = document.getElementById('greet');
+            screen.style.display = 'flex';
+            greet.innerText = "WELCOME " + name.toUpperCase();
+            
+            // Animation sequence
+            setTimeout(() => { 
+                greet.style.transition = "2s";
+                greet.style.opacity = "1";
+                greet.style.transform = "translateY(0)";
+            }, 500);
+
+            setTimeout(() => { 
+                screen.style.transition = "1s";
+                screen.style.opacity = "0";
+                setTimeout(() => screen.style.display = 'none', 1000);
+            }, 3000);
         }
 
         let iData = "";
@@ -116,21 +156,20 @@
         }
 
         function generate() {
-            const page = document.getElementById('main-page');
-            page.className = "page " + selectedTheme + "-theme"; // Apply selected theme class
-            
-            document.getElementById('res-name').innerText = document.getElementById('fn').value;
+            const p = document.getElementById('page1');
+            p.className = "page " + theme + "-theme";
+            document.getElementById('res-name').innerText = document.getElementById('fn').value.toUpperCase();
             document.getElementById('res-role').innerText = document.getElementById('fr').value;
+            document.getElementById('res-contact').innerText = `📞 ${document.getElementById('fph').value} | 📧 ${document.getElementById('fem').value} | 🔗 ${document.getElementById('fli').value}`;
             document.getElementById('res-ab').innerText = document.getElementById('fab').value;
             document.getElementById('res-pj').innerText = document.getElementById('fpj').value;
             if(iData) document.getElementById('res-img').src = iData;
-            
             document.getElementById('res-ui').style.display = 'block';
         }
 
-        function savePdf() {
+        function save() {
             const e = document.getElementById('pdf-area');
-            html2pdf().from(e).save('My_Portfolio.pdf');
+            html2pdf().from(e).save('Portfolio_Elite.pdf');
         }
     </script>
 </body>
