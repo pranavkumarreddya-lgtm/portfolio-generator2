@@ -3,54 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NEXUS 3D | Ultimate Portfolio Suite</title>
+    <title>NEXUS 3D | Ultimate Suite</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&family=Orbitron:wght@400;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        :root { --gold: #c5a059; --cyan: #00f2ff; --bg: #030303; }
-        body { margin: 0; font-family: 'Poppins', sans-serif; background: var(--bg); color: white; overflow-x: hidden; perspective: 1000px; }
+        :root { --gold: #c5a059; --bg: #030303; --glass: rgba(255, 255, 255, 0.05); }
+        body { margin: 0; font-family: 'Poppins', sans-serif; background: var(--bg); color: white; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
 
         /* 3D DOORS */
-        .door { position: fixed; top: 0; width: 50%; height: 100%; background: #111; z-index: 500; transition: 1.5s cubic-bezier(0.7, 0, 0.3, 1); border: 1px solid #222; box-shadow: 0 0 50px rgba(0,0,0,1); }
+        .door { position: fixed; top: 0; width: 50%; height: 100%; background: #111; z-index: 500; transition: 1.5s cubic-bezier(0.7, 0, 0.3, 1); border: 1px solid #222; }
         .left-door { left: 0; border-right: 3px solid var(--gold); }
         .right-door { right: 0; border-left: 3px solid var(--gold); }
         .open .left-door { transform: rotateY(-90deg) translateX(-100%); opacity: 0; }
         .open .right-door { transform: rotateY(90deg) translateX(100%); opacity: 0; }
 
-        /* AUTH CARD */
-        .auth-card { position: fixed; z-index: 510; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(15,15,15,0.9); padding: 30px; border-radius: 20px; border: 1px solid var(--gold); text-align: center; width: 85%; max-width: 320px; backdrop-filter: blur(15px); }
-        .open .auth-card { display: none; }
-        #cap-box { background: #000; color: var(--gold); padding: 12px; margin: 15px 0; letter-spacing: 8px; font-weight: 900; border: 1px dashed var(--gold); font-size: 22px; }
+        /* CENTERED 3D LOGIN CARD */
+        .auth-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; z-index: 510; transition: 0.5s; }
+        .open .auth-container { visibility: hidden; opacity: 0; }
+        .auth-card { background: rgba(15,15,15,0.9); padding: 35px; border-radius: 20px; border: 1px solid var(--gold); text-align: center; width: 90%; max-width: 350px; backdrop-filter: blur(20px); box-shadow: 0 20px 50px rgba(0,0,0,1); transform: translateZ(50px); }
 
-        /* 3D GREETING */
-        #welcome-overlay { position: fixed; top:0; left:0; width:100%; height:100%; display:none; align-items:center; justify-content:center; background: radial-gradient(circle, #111 0%, #000 100%); z-index: 450; }
-        .greet-3d { font-family: 'Orbitron'; font-size: 10vw; color: var(--gold); text-shadow: 0 0 20px var(--gold), 0 0 40px #fff; transform: translateZ(50px); opacity: 0; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
-
-        /* 3D SIDEBAR */
-        .menu-btn { position: fixed; top: 20px; left: 20px; z-index: 600; cursor: pointer; display: none; background: rgba(197, 160, 89, 0.2); padding: 10px; border-radius: 50%; }
+        /* UI ELEMENTS */
+        .menu-btn { position: fixed; top: 20px; left: 20px; z-index: 600; cursor: pointer; display: none; }
         .open .menu-btn { display: block; }
-        .sidebar { position: fixed; left: -300px; top: 0; width: 280px; height: 100%; background: rgba(5,5,5,0.95); z-index: 550; transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); padding: 100px 30px; border-right: 2px solid var(--gold); backdrop-filter: blur(20px); transform: rotateY(-30deg); transform-origin: left; }
-        .sidebar.active { left: 0; transform: rotateY(0deg); }
+        .sidebar { position: fixed; left: -280px; top: 0; width: 260px; height: 100%; background: rgba(5,5,5,0.95); z-index: 550; transition: 0.5s; padding: 100px 20px; border-right: 2px solid var(--gold); backdrop-filter: blur(20px); }
+        .sidebar.active { left: 0; }
 
-        /* FLOATING DASHBOARD */
-        .container { display: none; padding: 100px 15px; max-width: 900px; margin: 0 auto; transition: 1s; }
-        .open .container { display: block; animation: slideUp 1s ease; }
-        @keyframes slideUp { from { transform: translateY(100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        /* 3D DASHBOARD CONTENT */
+        .container { display: none; width: 100%; padding: 80px 15px; box-sizing: border-box; }
+        .open .container { display: block; }
+        .glass-card { background: var(--glass); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 30px; backdrop-filter: blur(10px); box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
+        
+        input, textarea { width: 100%; padding: 12px; margin: 10px 0; background: rgba(0,0,0,0.6); border: 1px solid #333; color: white; border-radius: 10px; box-sizing: border-box; }
+        .btn { background: var(--gold); color: black; border: none; padding: 15px; border-radius: 10px; font-weight: 800; cursor: pointer; width: 100%; text-transform: uppercase; transition: 0.3s; }
+        .btn:hover { transform: scale(1.02); box-shadow: 0 0 20px var(--gold); }
 
-        .glass-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 30px; backdrop-filter: blur(10px); box-shadow: 0 15px 35px rgba(0,0,0,0.5); margin-bottom: 30px; }
-        input, textarea { width: 100%; padding: 14px; margin: 10px 0; background: rgba(0,0,0,0.5); border: 1px solid #333; color: white; border-radius: 10px; transition: 0.3s; }
-        input:focus { border-color: var(--gold); box-shadow: 0 0 15px var(--gold); outline: none; }
-        .btn { background: var(--gold); color: black; border: none; padding: 16px; border-radius: 10px; font-weight: 800; cursor: pointer; width: 100%; text-transform: uppercase; margin-top: 20px; transition: 0.4s; }
-        .btn:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 10px 20px rgba(197,160,89,0.4); }
+        /* PDF TEMPLATE (Strictly 2 Pages) */
+        #pdf-render { background: #222; padding: 20px 0; display: none; flex-direction: column; align-items: center; gap: 30px; }
+        .page { background: white; color: #333; width: 210mm; min-height: 296mm; padding: 20mm; box-sizing: border-box; position: relative; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
+        
+        .p-header { border-bottom: 5px solid var(--gold); padding-bottom: 20px; display: flex; align-items: center; gap: 30px; }
+        .p-img { width: 170px; height: 170px; border-radius: 50%; border: 4px solid var(--gold); object-fit: cover; }
+        h2 { border-left: 6px solid var(--gold); padding-left: 15px; text-transform: uppercase; color: #000; font-size: 20px; margin-top: 30px; }
+        .p-content { font-size: 15px; line-height: 1.7; white-space: pre-line; color: #444; }
+        .page-footer { position: absolute; bottom: 15mm; right: 20mm; color: #aaa; font-weight: bold; }
 
-        /* PORTFOLIO PDF STYLES */
-        .pdf-box { display: none; flex-direction: column; align-items: center; gap: 40px; background: #222; padding: 40px 0; }
-        .page { background: white; color: #333; width: 210mm; min-height: 297mm; padding: 20mm; box-sizing: border-box; position: relative; box-shadow: 0 0 50px rgba(0,0,0,0.8); }
-        .p-header { border-bottom: 6px solid var(--gold); padding-bottom: 30px; display: flex; align-items: center; gap: 40px; }
-        .p-img { width: 180px; height: 180px; border-radius: 50%; border: 5px solid var(--gold); object-fit: cover; }
-        .p-body h2 { border-left: 8px solid var(--gold); padding-left: 20px; text-transform: uppercase; font-size: 22px; margin-top: 40px; }
-        .p-content { font-size: 16px; line-height: 1.8; white-space: pre-line; color: #444; }
+        @media (max-width: 768px) {
+            .page { width: 100%; min-height: auto; padding: 10mm; }
+            .p-header { flex-direction: column; text-align: center; }
+        }
     </style>
 </head>
 <body id="master">
@@ -62,111 +62,86 @@
     </div>
 
     <div class="sidebar" id="sidebar">
-        <h2 style="color:var(--gold); font-family:'Orbitron';">NEXUS MENU</h2>
+        <h3 style="color:var(--gold); font-family:'Orbitron';">NEXUS THEMES</h3>
         <button class="btn" onclick="setTheme('classic')">Classic Gold</button>
-        <button class="btn" onclick="setTheme('cyber')" style="background:#00ff00;">Cyber Matrix</button>
-        <button class="btn" onclick="setTheme('modern')" style="background:#fff;">Modern Dark</button>
+        <button class="btn" onclick="setTheme('modern')" style="background:#fff; margin-top:10px;">Modern White</button>
     </div>
 
     <div class="door left-door"></div>
     <div class="door right-door"></div>
 
-    <div class="auth-card">
-        <h2 style="color:var(--gold); font-family:'Orbitron'; letter-spacing:2px;">SECURITY CHECK</h2>
-        <input type="text" id="username" placeholder="NAME">
-        <div id="cap-box"></div>
-        <input type="text" id="cap-in" placeholder="CAPTCHA">
-        <button class="btn" onclick="verify()">INITIALIZE NEXUS ⚡</button>
-    </div>
-
-    <div id="welcome-overlay">
-        <h1 class="greet-3d" id="greet-text"></h1>
+    <div class="auth-container">
+        <div class="auth-card">
+            <h2 style="color:var(--gold); font-family:'Orbitron'; letter-spacing:2px;">SECURITY CHECK</h2>
+            <input type="text" id="username" placeholder="NAME (USER ID)">
+            <div id="cap-box" style="background:#000; color:var(--gold); padding:10px; margin:10px 0; letter-spacing:8px; font-weight:900; border:1px dashed var(--gold);"></div>
+            <input type="text" id="cap-in" placeholder="TYPE CAPTCHA">
+            <button class="btn" onclick="verify()">INITIALIZE NEXUS ⚡</button>
+        </div>
     </div>
 
     <div class="container">
         <div class="glass-card">
-            <h2 id="mode-text" style="color:var(--gold); margin:0; font-family:'Orbitron';">MODE: 2-PAGE ELITE</h2>
-            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:15px; margin-top:25px;">
+            <h2 style="color:var(--gold); font-family:'Orbitron';">GENERATE ELITE 2-PAGE</h2>
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px; margin-top:10px;">
                 <input type="text" id="fn" placeholder="Full Name">
-                <input type="text" id="fr" placeholder="Current Role">
+                <input type="text" id="fr" placeholder="Role (e.g. Developer)">
                 <input type="text" id="fph" placeholder="Phone Number">
-                <input type="email" id="fem" placeholder="Email">
+                <input type="email" id="fem" placeholder="Email Address">
                 <input type="text" id="fli" placeholder="LinkedIn URL">
                 <input type="file" id="fimg" onchange="loadImg(event)">
             </div>
-            <textarea id="fab" rows="4" placeholder="Professional Summary (Page 1)"></textarea>
-            <textarea id="fpj" rows="6" placeholder="Major Projects (Page 1)"></textarea>
-            
-            <div style="margin-top:20px; border-top:1px solid #444; padding-top:20px;">
-                <h3 style="color:var(--gold)">PAGE 2 BUILDER</h3>
-                <input type="text" id="ct" placeholder="Section Title (e.g., Certifications)">
-                <textarea id="cd" rows="4" placeholder="Section Details..."></textarea>
-                <button class="btn" onclick="addCustom()" style="background:#333; color:white;">+ ADD TO PAGE 2</button>
-                <div id="added-info" style="font-size:12px; color:#888; margin-top:10px;"></div>
-            </div>
-
-            <button class="btn" onclick="build()">BUILD 3D PORTFOLIO ✨</button>
+            <textarea id="fab" rows="3" placeholder="Professional Summary (Page 1)"></textarea>
+            <textarea id="fpj" rows="5" placeholder="Featured Projects (Page 1)"></textarea>
+            <textarea id="fex" rows="4" placeholder="Certifications & Extra Details (Page 2)"></textarea>
+            <button class="btn" onclick="build()">GENERATE PORTFOLIO ✨</button>
         </div>
 
-        <div id="res-ui" class="pdf-box">
-            <div id="pdf-content">
-                <div id="p1" class="page">
+        <div id="pdf-render">
+            <div id="pdf-capture" style="background: #222; display: flex; flex-direction: column; gap: 20px;">
+                <div class="page" id="page1">
                     <div class="p-header">
-                        <img id="res-img" class="p-img">
-                        <div>
-                            <h1 id="res-name" style="margin:0; font-size:45px; text-transform:uppercase;"></h1>
-                            <p id="res-role" style="color:var(--gold); font-weight:800; font-size:20px;"></p>
-                            <p id="res-contacts" style="font-size:14px; color:#666;"></p>
+                        <img id="res-img" class="p-img" src="">
+                        <div style="flex:1;">
+                            <h1 id="res-name" style="margin:0; font-size:38px; color:#000;"></h1>
+                            <p id="res-role" style="color:var(--gold); font-weight:bold; font-size:18px;"></p>
+                            <p id="res-contacts" style="font-size:13px; color:#666;"></p>
                         </div>
                     </div>
-                    <div class="p-body">
-                        <h2>Profile Summary</h2>
-                        <p id="res-ab" class="p-content"></p>
-                        <h2>Featured Projects</h2>
-                        <p id="res-pj" class="p-content"></p>
-                    </div>
+                    <h2>About Me</h2>
+                    <p id="res-ab" class="p-content"></p>
+                    <h2>Main Projects</h2>
+                    <p id="res-pj" class="p-content"></p>
+                    <div class="page-footer">Page 01</div>
                 </div>
-                <div id="p2" class="page">
-                    <div id="res-custom" class="p-body">
+                <div class="page" id="page2">
+                    <h2>Certifications & Extra Info</h2>
+                    <p id="res-ex" class="p-content"></p>
+                    <div style="margin-top:40px;">
                         <h2>Technical Skills</h2>
-                        <p class="p-content">Python, Java, C++, JavaScript, React, SQL.</p>
+                        <p class="p-content">Python, Java, JavaScript, Web Technologies (HTML, CSS), SQL, Git.</p>
                     </div>
+                    <div class="page-footer">Page 02</div>
                 </div>
             </div>
-            <button class="btn" onclick="download()" style="background:#2ecc71; margin-top:30px; width:300px;">DOWNLOAD PDF 📄</button>
+            <button class="btn" onclick="download()" style="background:#2ecc71; margin-top:30px; max-width:400px;">DOWNLOAD PROFESSIONAL PDF 📄</button>
         </div>
     </div>
 
     <script>
+        // Captcha Setup
         let code = Math.random().toString(36).substring(2, 7).toUpperCase();
         document.getElementById('cap-box').innerText = code;
-        let theme = 'classic';
-        let customItems = [];
 
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
-        function setTheme(t) { theme = t; document.getElementById('mode-text').innerText = "MODE: " + t.toUpperCase(); toggleSidebar(); }
-        
-        function verify() {
-            const name = document.getElementById('username').value;
-            if(name && document.getElementById('cap-in').value.toUpperCase() === code) {
-                document.getElementById('master').classList.add('open');
-                const overlay = document.getElementById('welcome-overlay');
-                const greet = document.getElementById('greet-text');
-                overlay.style.display = 'flex';
-                greet.innerText = "WELCOME " + name.toUpperCase();
-                setTimeout(() => { greet.style.opacity = 1; greet.style.transform = "translateZ(100px)"; }, 100);
-                setTimeout(() => { overlay.style.opacity = 0; setTimeout(() => overlay.style.display = 'none', 1000); }, 3000);
-            } else { alert("Access Denied!"); }
-        }
+        function setTheme(t) { /* Add theme logic here if needed */ toggleSidebar(); }
 
-        function addCustom() {
-            const t = document.getElementById('ct').value;
-            const d = document.getElementById('cd').value;
-            if(t && d) { 
-                customItems.push({t, d}); 
-                document.getElementById('added-info').innerText += ` [${t}] Added.`;
-                document.getElementById('ct').value = ''; document.getElementById('cd').value = ''; 
-            }
+        function verify() {
+            const u = document.getElementById('username').value;
+            const c = document.getElementById('cap-in').value.toUpperCase();
+            if(u && c === code) {
+                document.getElementById('master').classList.add('open');
+            } else { alert("Failed! Check name and captcha."); }
         }
 
         let iData = "";
@@ -177,30 +152,29 @@
         }
 
         function build() {
-            document.getElementById('res-name').innerText = document.getElementById('fn').value;
+            document.getElementById('res-name').innerText = document.getElementById('fn').value.toUpperCase();
             document.getElementById('res-role').innerText = document.getElementById('fr').value;
-            document.getElementById('res-contacts').innerText = `${document.getElementById('fph').value} | ${document.getElementById('fem').value} | ${document.getElementById('fli').value}`;
+            document.getElementById('res-contacts').innerText = `📞 ${document.getElementById('fph').value} | 📧 ${document.getElementById('fem').value} | 🔗 ${document.getElementById('fli').value}`;
             document.getElementById('res-ab').innerText = document.getElementById('fab').value;
             document.getElementById('res-pj').innerText = document.getElementById('fpj').value;
+            document.getElementById('res-ex').innerText = document.getElementById('fex').value;
             if(iData) document.getElementById('res-img').src = iData;
 
-            const cBox = document.getElementById('res-custom');
-            cBox.innerHTML = customItems.length > 0 ? "" : "<h2>Technical Skills</h2><p class='p-content'>Python, Java, JavaScript, Web Dev.</p>";
-            customItems.forEach(i => cBox.innerHTML += `<h2>${i.t}</h2><p class="p-content">${i.d}</p>`);
-
-            document.getElementById('res-ui').style.display = 'flex';
-            window.scrollTo(0, document.body.scrollHeight);
+            document.getElementById('pdf-render').style.display = 'flex';
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
 
         function download() {
-            const element = document.getElementById('pdf-content');
+            const element = document.getElementById('pdf-capture');
             const opt = { 
                 margin: 0, 
-                filename: 'Nexus_Elite_Portfolio.pdf', 
-                html2canvas: { scale: 2, useCORS: true }, 
+                filename: 'Elite_Portfolio.pdf', 
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true, logging: false, letterRendering: true }, 
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } 
             };
-            html2pdf().set(opt).from(element).save();
+            // The Fix: Use Promise to ensure rendering is complete
+            html2pdf().set(opt).from(element).toPdf().get('pdf').save();
         }
     </script>
 </body>
