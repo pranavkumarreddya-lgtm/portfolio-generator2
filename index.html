@@ -3,67 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXUS 3D | Fixed View</title>
+    <title>NEXUS 3D | Final Stable</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&family=Orbitron:wght@400;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        :root { --gold: #c5a059; --bg: #030303; }
-        
-        /* THE FIX: Ensure body allows scrolling if content is too tall */
-        body { 
-            margin: 0; 
-            font-family: 'Poppins', sans-serif; 
-            background: var(--bg); 
-            color: white; 
-            min-height: 100vh; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            overflow-y: auto; /* Allows scrolling on small laptop screens */
-            padding: 20px;
-            box-sizing: border-box;
-        }
+        :root { --gold: #c5a059; --bg: #030303; --glass: rgba(255, 255, 255, 0.05); }
+        body { margin: 0; font-family: 'Poppins', sans-serif; background: var(--bg); color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow-y: auto; padding: 20px; box-sizing: border-box; }
 
-        /* 3D DOORS */
-        .door { position: fixed; top: 0; width: 50%; height: 100%; background: #111; z-index: 500; transition: 1.5s ease-in-out; border: 1px solid #222; }
+        /* DOORS */
+        .door { position: fixed; top: 0; width: 50%; height: 100%; background: #111; z-index: 500; transition: 1.2s ease-in-out; border: 1px solid #222; }
         .left-door { left: 0; border-right: 3px solid var(--gold); }
         .right-door { right: 0; border-left: 3px solid var(--gold); }
         .open .left-door { transform: rotateY(-90deg) translateX(-100%); opacity: 0; }
         .open .right-door { transform: rotateY(90deg) translateX(100%); opacity: 0; }
 
-        /* AUTH CARD - Fixed Centering */
-        .auth-container { 
-            width: 100%; 
-            display: flex; 
-            justify-content: center; 
-            z-index: 510; 
-            transition: 0.5s; 
-        }
+        /* AUTH CARD */
+        .auth-container { width: 100%; display: flex; justify-content: center; z-index: 510; }
         .open .auth-container { display: none; }
+        .auth-card { background: rgba(15,15,15,0.95); padding: 30px; border-radius: 20px; border: 1px solid var(--gold); text-align: center; width: 100%; max-width: 350px; backdrop-filter: blur(20px); }
 
-        .auth-card { 
-            background: rgba(15,15,15,0.95); 
-            padding: 30px; 
-            border-radius: 20px; 
-            border: 1px solid var(--gold); 
-            text-align: center; 
-            width: 100%; 
-            max-width: 350px; 
-            backdrop-filter: blur(20px); 
-            box-shadow: 0 20px 50px rgba(0,0,0,1);
-        }
-
-        input { width: 100%; padding: 12px; margin: 10px 0; background: rgba(0,0,0,0.6); border: 1px solid #333; color: white; border-radius: 10px; box-sizing: border-box; }
-        .btn { background: var(--gold); color: black; border: none; padding: 15px; border-radius: 10px; font-weight: 800; cursor: pointer; width: 100%; text-transform: uppercase; }
-
-        /* DASHBOARD SECTION */
-        .container { display: none; width: 100%; max-width: 900px; margin: 0 auto; padding-top: 60px; }
+        /* DASHBOARD (FIXED BOXES) */
+        .container { display: none; width: 100%; max-width: 1000px; margin: 0 auto; padding-top: 40px; }
         .open .container { display: block; }
-        .glass-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 25px; backdrop-filter: blur(10px); }
+        .glass-card { background: var(--glass); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 25px; backdrop-filter: blur(10px); }
+        
+        /* FIX FOR WHITE BOXES */
+        input, textarea { width: 100%; padding: 12px; margin: 8px 0; background: rgba(0,0,0,0.8) !important; border: 1px solid #333; color: white !important; border-radius: 8px; box-sizing: border-box; font-family: 'Poppins'; }
+        textarea { resize: vertical; min-height: 80px; }
+        input:focus, textarea:focus { border-color: var(--gold); outline: none; background: #000 !important; }
 
-        /* PDF PAGES */
-        #pdf-render { display: none; flex-direction: column; align-items: center; gap: 30px; margin-top: 50px; padding-bottom: 100px; }
+        .btn { background: var(--gold); color: black; border: none; padding: 15px; border-radius: 8px; font-weight: 800; cursor: pointer; width: 100%; text-transform: uppercase; margin-top: 15px; transition: 0.3s; }
+        .btn:hover { background: white; transform: scale(1.01); }
+
+        /* PDF PREVIEW (STRICT 2 PAGES) */
+        #pdf-render { display: none; flex-direction: column; align-items: center; gap: 30px; margin-top: 40px; padding-bottom: 50px; }
         .page { background: white; color: #333; width: 210mm; min-height: 296mm; padding: 20mm; box-sizing: border-box; position: relative; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
+        
+        .p-header { border-bottom: 5px solid var(--gold); padding-bottom: 20px; display: flex; align-items: center; gap: 30px; }
+        .p-img { width: 150px; height: 150px; border-radius: 50%; border: 4px solid var(--gold); object-fit: cover; background: #eee; }
+        .p-body h2 { border-left: 6px solid var(--gold); padding-left: 15px; text-transform: uppercase; font-size: 20px; margin-top: 30px; color: #000; }
+        .p-content { font-size: 15px; line-height: 1.7; white-space: pre-line; color: #444; text-align: justify; }
+        .p-footer { position: absolute; bottom: 10mm; right: 20mm; font-size: 12px; color: #aaa; font-weight: bold; }
     </style>
 </head>
 <body id="master">
@@ -83,43 +63,53 @@
 
     <div class="container">
         <div class="glass-card">
-            <h2 style="color:var(--gold); font-family:'Orbitron';">GENERATE PORTFOLIO</h2>
-            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:10px;">
+            <h2 style="color:var(--gold); font-family:'Orbitron';">GENERATE PORTFOLIO (2-PAGE)</h2>
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
                 <input type="text" id="fn" placeholder="Full Name">
-                <input type="text" id="fr" placeholder="Role">
-                <input type="text" id="fph" placeholder="Phone">
-                <input type="email" id="fem" placeholder="Email">
-                <input type="text" id="fli" placeholder="LinkedIn">
+                <input type="text" id="fr" placeholder="Current Role">
+                <input type="text" id="fph" placeholder="Phone Number">
+                <input type="email" id="fem" placeholder="Email Address">
+                <input type="text" id="fli" placeholder="LinkedIn URL">
                 <input type="file" id="fimg" onchange="loadImg(event)">
             </div>
-            <textarea id="fab" rows="3" placeholder="Summary"></textarea>
-            <textarea id="fpj" rows="4" placeholder="Projects"></textarea>
-            <textarea id="fex" rows="3" placeholder="Page 2 Info"></textarea>
-            <button class="btn" onclick="build()">BUILD ✨</button>
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:12px; margin-top:10px;">
+                <textarea id="fab" placeholder="About Me / Summary (Page 1)"></textarea>
+                <textarea id="fpj" placeholder="Main Projects (Page 1)"></textarea>
+                <textarea id="fex" placeholder="Certifications & Additional Info (Page 2)"></textarea>
+            </div>
+            <button class="btn" onclick="build()">BUILD PORTFOLIO ✨</button>
         </div>
 
         <div id="pdf-render">
-            <div id="pdf-content">
+            <div id="pdf-capture" style="background: #222; display: flex; flex-direction: column; gap: 20px;">
                 <div class="page" id="p1">
-                    <div style="border-bottom: 5px solid var(--gold); padding-bottom: 20px; display: flex; align-items: center; gap: 20px;">
-                        <img id="res-img" style="width:150px; height:150px; border-radius:50%; border:4px solid var(--gold); object-fit: cover;">
+                    <div class="p-header">
+                        <img id="res-img" class="p-img" src="">
                         <div style="flex:1;">
-                            <h1 id="res-name" style="margin:0; font-size:32px;"></h1>
-                            <p id="res-role" style="color:var(--gold); font-weight:bold;"></p>
-                            <p id="res-contacts" style="font-size:12px; color:#666;"></p>
+                            <h1 id="res-name" style="margin:0; font-size:35px; color:#000;"></h1>
+                            <p id="res-role" style="color:var(--gold); font-weight:bold; font-size:18px; margin:5px 0;"></p>
+                            <p id="res-contacts" style="font-size:13px; color:#666; margin:0;"></p>
                         </div>
                     </div>
-                    <h2>About Me</h2>
-                    <p id="res-ab" style="font-size:15px; line-height:1.7; color:#444;"></p>
-                    <h2>Projects</h2>
-                    <p id="res-pj" style="font-size:15px; line-height:1.7; color:#444; white-space: pre-line;"></p>
+                    <div class="p-body">
+                        <h2>Professional Summary</h2>
+                        <p id="res-ab" class="p-content"></p>
+                        <h2>Key Projects</h2>
+                        <p id="res-pj" class="p-content"></p>
+                    </div>
+                    <div class="p-footer">PAGE 01</div>
                 </div>
-                <div class="page" id="p2" style="margin-top:20px;">
-                    <h2>Extra Info & Skills</h2>
-                    <p id="res-ex" style="font-size:15px; line-height:1.7; color:#444; white-space: pre-line;"></p>
+                <div class="page" id="p2">
+                    <div class="p-body">
+                        <h2>Certifications & Extra Info</h2>
+                        <p id="res-ex" class="p-content"></p>
+                        <h2 style="margin-top:40px;">Technical Skills</h2>
+                        <p class="p-content">Python, Java, JavaScript, Web Technologies (HTML, CSS), SQL, Git, VS Code.</p>
+                    </div>
+                    <div class="p-footer">PAGE 02</div>
                 </div>
             </div>
-            <button class="btn" onclick="download()" style="background:#2ecc71; margin-top:20px;">SAVE PDF 📄</button>
+            <button class="btn" onclick="download()" style="background:#2ecc71; margin-top:30px; max-width:400px;">SAVE PROFESSIONAL PDF 📄</button>
         </div>
     </div>
 
@@ -130,8 +120,7 @@
         function verify() {
             if(document.getElementById('username').value && document.getElementById('cap-in').value.toUpperCase() === code) {
                 document.getElementById('master').classList.add('open');
-                document.body.style.overflowY = "auto"; // Re-enable scrolling after login
-            } else { alert("Failed!"); }
+            } else { alert("Failed! Check Name/Captcha."); }
         }
 
         let iData = "";
@@ -144,20 +133,21 @@
         function build() {
             document.getElementById('res-name').innerText = document.getElementById('fn').value.toUpperCase();
             document.getElementById('res-role').innerText = document.getElementById('fr').value;
-            document.getElementById('res-contacts').innerText = `${document.getElementById('fph').value} | ${document.getElementById('fem').value}`;
+            document.getElementById('res-contacts').innerText = `📞 ${document.getElementById('fph').value} | 📧 ${document.getElementById('fem').value} | 🔗 ${document.getElementById('fli').value}`;
             document.getElementById('res-ab').innerText = document.getElementById('fab').value;
             document.getElementById('res-pj').innerText = document.getElementById('fpj').value;
             document.getElementById('res-ex').innerText = document.getElementById('fex').value;
             if(iData) document.getElementById('res-img').src = iData;
 
             document.getElementById('pdf-render').style.display = 'flex';
+            window.scrollTo({ top: document.getElementById('pdf-render').offsetTop, behavior: 'smooth' });
         }
 
         function download() {
-            const element = document.getElementById('pdf-content');
+            const element = document.getElementById('pdf-capture');
             const opt = { 
                 margin: 0, 
-                filename: 'Portfolio.pdf', 
+                filename: 'Professional_Portfolio.pdf', 
                 html2canvas: { scale: 2, useCORS: true }, 
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } 
             };
