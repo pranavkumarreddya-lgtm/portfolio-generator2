@@ -3,147 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXUS PRO | Fixed Edition</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&family=Orbitron:wght@400;900&display=swap" rel="stylesheet">
+    <title>NEXUS 3D | Themes Restored</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        :root { --accent: #00d2ff; --bg-dash: #0f172a; --gold: #c5a059; }
-        body { margin: 0; font-family: 'Poppins', sans-serif; background: #050505; color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; perspective: 2000px; overflow-x: hidden; }
+        :root { --accent: #00d2ff; --bg: #020202; }
+        body { margin: 0; font-family: 'Poppins', sans-serif; background: var(--bg); color: white; min-height: 100vh; overflow-x: hidden; display: flex; align-items: center; justify-content: center; }
+
+        /* SPACE BG */
+        #space-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: #000; }
+        .star { position: absolute; background: white; border-radius: 50%; opacity: 0.4; animation: flow linear infinite; }
+        @keyframes flow { from { transform: translateY(0); } to { transform: translateY(100vh); } }
 
         /* DOORS */
-        .door { position: fixed; top: 0; width: 50%; height: 100%; background: #111; z-index: 1000; transition: 1.2s; border: 1px solid #222; }
+        .door { position: fixed; top: 0; width: 50%; height: 100%; background: #0a0a0a; z-index: 1000; transition: 1.2s; border: 1px solid #111; }
         .left-door { left: 0; border-right: 3px solid var(--accent); }
         .right-door { right: 0; border-left: 3px solid var(--accent); }
-        .open .left-door { transform: rotateY(-90deg) translateX(-100%); opacity: 0; }
-        .open .right-door { transform: rotateY(90deg) translateX(100%); opacity: 0; }
+        .open .left-door { transform: translateX(-100%); }
+        .open .right-door { transform: translateX(100%); }
 
-        /* AUTH CARD - FIXED CAPTCHA BOX */
-        .auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; z-index: 1010; background: #000; transition: 0.8s; }
-        .open .auth-overlay { opacity: 0; visibility: hidden; }
-        .auth-card { background: rgba(15,15,15,0.95); padding: 30px; border-radius: 20px; border: 2px solid var(--accent); text-align: center; width: 90%; max-width: 350px; }
-        #cap-box { background: #000; color: var(--accent); padding: 12px; margin: 15px 0; letter-spacing: 8px; font-weight: 900; border: 1px dashed var(--accent); font-size: 22px; font-family: 'Orbitron'; }
+        /* SIDEBAR */
+        .menu-btn { position: fixed; top: 25px; left: 25px; z-index: 900; cursor: pointer; display: none; background: rgba(0,210,255,0.1); padding: 12px; border-radius: 10px; border: 1px solid var(--accent); }
+        .open .menu-btn { display: block; }
+        .sidebar { position: fixed; left: -320px; top: 0; width: 280px; height: 100%; background: #0f172a; z-index: 850; transition: 0.5s; padding: 120px 25px; border-right: 2px solid var(--accent); }
+        .sidebar.active { left: 0; }
 
-        /* DASHBOARD - NO WASTE SPACE */
-        .main-container { display: none; width: 100%; max-width: 1000px; padding: 20px; box-sizing: border-box; transition: 0.1s; }
+        /* AUTH */
+        .auth-overlay { position: fixed; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; z-index: 1010; background: #000; }
+        .auth-card { padding: 35px; border: 2px solid var(--accent); border-radius: 20px; text-align: center; background: #0d0d0d; width: 340px; }
+        #cap-box { background: #000; color: var(--accent); padding: 12px; margin: 15px 0; letter-spacing: 8px; font-weight: 900; border: 1px dashed var(--accent); font-size: 24px; font-family: 'Orbitron'; }
+
+        /* DASHBOARD */
+        .main-container { display: none; width: 95%; max-width: 1000px; z-index: 10; padding: 20px 0; }
         .open .main-container { display: block; }
-        .glass-panel { background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%); border: 1px solid rgba(0, 210, 255, 0.3); border-radius: 20px; padding: 25px; backdrop-filter: blur(20px); transform-style: preserve-3d; }
+        .glass-panel { background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 30px; backdrop-filter: blur(15px); }
         
-        input, textarea { width: 100%; padding: 12px; margin: 8px 0; background: rgba(0,0,0,0.5) !important; border: 1px solid #334155; color: #38bdf8 !important; border-radius: 10px; box-sizing: border-box; }
-        .action-btn { background: var(--accent); color: white; border: none; padding: 15px; border-radius: 10px; font-weight: 800; cursor: pointer; width: 100%; text-transform: uppercase; margin-top: 15px; }
+        input, textarea { width: 100%; padding: 12px; margin: 6px 0; background: rgba(0,0,0,0.6); border: 1px solid #334155; color: #38bdf8; border-radius: 10px; box-sizing: border-box; font-family: 'Poppins'; }
+        .btn { background: var(--accent); color: white; border: none; padding: 15px; border-radius: 10px; font-weight: 800; cursor: pointer; width: 100%; text-transform: uppercase; margin-top: 10px; }
 
-        /* PDF FIX: CONTENT STARTS FROM TOP */
+        /* PDF FIX */
         #render-vault { position: absolute; left: -9999px; top: -9999px; }
-        .pdf-page { background: white; color: #333; width: 210mm; min-height: 297mm; padding: 10mm 15mm; box-sizing: border-box; position: relative; }
-        .p-header { border-bottom: 5px solid #0f172a; padding-bottom: 10px; display: flex; align-items: center; gap: 20px; margin-top: 0; }
-        .p-img { width: 130px; height: 130px; border-radius: 50%; border: 4px solid #0f172a; object-fit: cover; }
-        .p-body h2 { border-left: 6px solid #38bdf8; padding-left: 15px; text-transform: uppercase; font-size: 18px; margin-top: 15px; color: #000; }
-        .p-text { font-size: 14px; line-height: 1.5; white-space: pre-line; color: #444; margin: 5px 0; }
+        .pdf-page { width: 210mm; min-height: 297mm; padding: 10mm 15mm; background: white; color: #111; box-sizing: border-box; display: block; }
+        .pdf-header { display: flex; align-items: center; gap: 25px; border-bottom: 4px solid #222; padding-bottom: 12px; margin-top: 0; }
+        .pdf-img { width: 130px; height: 130px; border-radius: 10px; object-fit: cover; border: 4px solid var(--accent); }
+        .pdf-h2 { font-family: 'Orbitron'; font-size: 19px; border-bottom: 2px solid var(--accent); display: block; width: 100%; padding-bottom: 3px; margin: 15px 0 6px 0; color: #000; text-transform: uppercase; }
+        .pdf-body { font-size: 13.5px; line-height: 1.5; color: #333; white-space: pre-line; }
     </style>
 </head>
-<body id="master-body" onmousemove="handle3D(event)">
+<body id="master-body">
+
+    <div id="space-bg"></div>
+
+    <div class="menu-btn" onclick="toggleSidebar()">☰ THEMES</div>
+    <div class="sidebar" id="sidebar">
+        <h3 style="color:var(--accent)">SELECT THEME</h3>
+        <button class="btn" onclick="switchTheme('student')">Student Pro</button>
+        <button class="btn" onclick="switchTheme('exec')" style="background:#c5a059">Executive Gold</button>
+    </div>
 
     <div class="door left-door"></div>
     <div class="door right-door"></div>
 
-    <div class="auth-overlay">
+    <div class="auth-overlay" id="auth-layer">
         <div class="auth-card">
-            <h2 style="color:var(--accent); font-family:'Orbitron';">SECURITY AUTH</h2>
-            <input type="text" id="login-user" placeholder="NAME">
-            <div id="cap-box"></div> <input type="text" id="cap-in" placeholder="TYPE CAPTCHA">
-            <button class="action-btn" onclick="verifyLogin()">UNLOCK ACCESS ⚡</button>
+            <h2 style="color:var(--accent); font-family:'Orbitron'">LOGIN</h2>
+            <input type="text" id="un-in" placeholder="Username">
+            <div id="cap-box"></div>
+            <input type="text" id="cp-in" placeholder="Captcha">
+            <button class="btn" onclick="verifyLogin()">UNLOCK ⚡</button>
         </div>
     </div>
 
-    <div class="main-container" id="dash">
+    <div class="main-container">
         <div class="glass-panel">
-            <h2 style="color:var(--accent); font-family:'Orbitron'; margin:0;">DYNAMIC PORTFOLIO BUILDER</h2>
-            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:10px; margin-top:15px;">
+            <h2 id="welcome-txt" style="color:var(--accent); font-family:'Orbitron'; margin:0 0 10px 0;">WELCOME</h2>
+            <p id="current-theme" style="font-size:12px; color:var(--accent); margin-bottom:15px;"></p>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
                 <input type="text" id="fn" placeholder="Full Name">
-                <input type="text" id="fr" placeholder="Role">
-                <input type="text" id="fph" placeholder="Phone">
-                <input type="email" id="fem" placeholder="Email">
-                <input type="file" id="fimg" onchange="processImage(event)">
+                <input type="text" id="fr" placeholder="Headline">
+                <input type="file" id="fi" onchange="hImg(event)">
+                <input type="text" id="fsk" placeholder="Tech Skills">
+                <input type="text" id="fss" placeholder="Soft Skills">
+                <input type="text" id="fed" placeholder="Education">
+                <input type="text" id="flang" placeholder="Languages">
             </div>
-            <textarea id="fab" rows="3" placeholder="Summary"></textarea>
-            <textarea id="fpj" rows="5" placeholder="Work & Projects (Smart Overflow to P2)"></textarea>
-            <button class="action-btn" onclick="generateAndReady()">BUILD NO-WASTE PDF ✨</button>
-        </div>
-        
-        <div id="preview-status" style="display:none; text-align:center; margin-top:20px;">
-            <button class="action-btn" onclick="finalDownload()" style="background:#2ecc71; max-width:300px;">SAVE FINAL PDF 📄</button>
+            <textarea id="f-p1" rows="3" placeholder="Project 1"></textarea>
+            <textarea id="f-p2" rows="3" placeholder="Project 2"></textarea>
+            <textarea id="f-cert" rows="3" placeholder="Certifications"></textarea>
+            <button class="btn" onclick="buildPDF()">GENERATE PORTFOLIO ✨</button>
         </div>
     </div>
 
-    <div id="render-vault">
-        <div id="pdf-capture">
-            <div class="pdf-page" id="p1">
-                <div class="p-header">
-                    <img id="res-img" class="p-img" src="">
-                    <div><h1 id="res-name" style="margin:0; font-size:32px; color:#000;"></h1><p id="res-role" style="color:#38bdf8; font-weight:800; font-size:18px;"></p></div>
-                </div>
-                <div class="p-body">
-                    <h2>Professional Profile</h2><p id="res-about" class="p-text"></p>
-                    <h2>Key Projects</h2><p id="res-projects" class="p-text"></p>
-                </div>
-            </div>
-            <div class="pdf-page" id="p2" style="display:none;">
-                <div class="p-body" id="p2-content"></div>
-            </div>
-        </div>
-    </div>
+    <div id="render-vault"><div id="pdf-content"></div></div>
 
     <script>
-        // CAPTCHA GENERATION
-        let capCode = Math.random().toString(36).substring(2, 7).toUpperCase();
-        document.getElementById('cap-box').innerText = capCode;
-
-        function handle3D(e) {
-            if(!document.getElementById('master-body').classList.contains('open')) return;
-            const dash = document.getElementById('dash');
-            const x = (window.innerWidth / 2 - e.pageX) / 45;
-            const y = (window.innerHeight / 2 - e.pageY) / 45;
-            dash.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+        // Space Background
+        const bg = document.getElementById('space-bg');
+        for(let i=0; i<100; i++){
+            let s = document.createElement('div');
+            s.className='star'; s.style.width=s.style.height=Math.random()*3+'px';
+            s.style.left=Math.random()*100+'vw'; s.style.top=Math.random()*100+'vh';
+            s.style.animationDuration=Math.random()*3+2+'s'; bg.appendChild(s);
         }
+
+        let code = Math.random().toString(36).substring(2, 7).toUpperCase();
+        document.getElementById('cap-box').innerText = code;
+        let selectedTheme = 'student';
+        let colors = { student: '#00d2ff', exec: '#c5a059' };
 
         function verifyLogin() {
-            const user = document.getElementById('login-user').value;
-            const input = document.getElementById('cap-in').value.toUpperCase();
-            if(user && input === capCode) {
+            const user = document.getElementById('un-in').value;
+            const cap = document.getElementById('cp-in').value.toUpperCase();
+            if(user && cap === code) {
                 document.getElementById('master-body').classList.add('open');
-                document.body.style.background = "var(--bg-dash)";
-            } else { alert("ACCESS DENIED: Captcha Dobbindi/Incorrect"); }
+                document.getElementById('auth-layer').style.display = 'none';
+                document.getElementById('welcome-txt').innerText = "WELCOME, " + user.toUpperCase();
+                switchTheme('student');
+            } else { alert("Check Credentials!"); }
         }
 
-        let imageData = "";
-        function processImage(e) {
-            const reader = new FileReader();
-            reader.onload = () => imageData = reader.result;
-            reader.readAsDataURL(e.target.files[0]);
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
+
+        function switchTheme(t) {
+            selectedTheme = t;
+            const color = colors[t];
+            document.getElementById('current-theme').innerText = "Active Theme: " + t.toUpperCase();
+            document.documentElement.style.setProperty('--accent', color);
+            if(document.getElementById('sidebar').classList.contains('active')) toggleSidebar();
         }
 
-        function generateAndReady() {
-            document.getElementById('res-name').innerText = document.getElementById('fn').value.toUpperCase();
-            document.getElementById('res-role').innerText = document.getElementById('fr').value;
-            document.getElementById('res-about').innerText = document.getElementById('fab').value;
-            
-            const projects = document.getElementById('fpj').value;
-            if(projects.length > 950) {
-                document.getElementById('res-projects').innerText = projects.substring(0, 950) + "... (Contd. on P2)";
-                document.getElementById('p2').style.display = 'block';
-                document.getElementById('p2-content').innerHTML = `<h2>Continued Projects</h2><p class="p-text">${projects.substring(950)}</p>`;
-            } else {
-                document.getElementById('res-projects').innerText = projects;
-                document.getElementById('p2').style.display = 'none';
-            }
-
-            if(imageData) document.getElementById('res-img').src = imageData;
-            document.getElementById('preview-status').style.display = 'block';
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        let uImg = "";
+        function hImg(e) {
+            const r = new FileReader(); r.onload = () => uImg = r.result; r.readAsDataURL(e.target.files[0]);
         }
 
-        function finalDownload() {
-            const element = document.getElementById('pdf-capture');
-            html2pdf().set({ margin: 0, filename: 'Nexus_Final.pdf', html2canvas: { scale: 3, useCORS: true }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } }).from(element).save();
+        function buildPDF() {
+            const color = colors[selectedTheme];
+            const data = [
+                {t: "TECH SKILLS", v: document.getElementById('fsk').value},
+                {t: "SOFT SKILLS", v: document.getElementById('fss').value},
+                {t: "PROJECT 1", v: document.getElementById('f-p1').value},
+                {t: "PROJECT 2", v: document.getElementById('f-p2').value},
+                {t: "CERTIFICATIONS", v: document.getElementById('f-cert').value},
+                {t: "EDUCATION", v: document.getElementById('fed').value},
+                {t: "LANGUAGES", v: document.getElementById('flang').value}
+            ];
+
+            let html = `<div class="pdf-page">
+                <div class="pdf-header" style="border-bottom-color:${color}">
+                    <img src="${uImg}" class="pdf-img" style="border-color:${color}">
+                    <div>
+                        <h1 style="font-family:'Orbitron'; margin:0; font-size:32px; color:#000;">${document.getElementById('fn').value.toUpperCase()}</h1>
+                        <p style="font-weight:700; color:${color}; font-size:20px; margin:4px 0;">${document.getElementById('fr').value}</p>
+                    </div>
+                </div>`;
+
+            data.forEach(item => {
+                if(item.v) {
+                    html += `<div class="pdf-section">
+                        <div class="pdf-h2" style="border-bottom-color:${color}">${item.t}</div>
+                        <div class="pdf-body">${item.v}</div>
+                    </div>`;
+                }
+            });
+
+            html += `</div>`;
+            document.getElementById('pdf-content').innerHTML = html;
+            html2pdf().set({ margin: 0, filename: 'Portfolio.pdf', html2canvas: { scale: 3, useCORS: true }, jsPDF: { unit: 'mm', format: 'a4' } }).from(document.getElementById('pdf-content')).save();
         }
     </script>
 </body>
