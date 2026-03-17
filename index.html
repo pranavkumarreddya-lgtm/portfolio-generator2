@@ -3,173 +3,213 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXUS AI | Multi-Template Suite</title>
+    <title>NEXUS AI | Multi-Page Ultimate Suite</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&family=Orbitron:wght@400;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        :root { --gold: #c5a059; --accent: #00d2ff; --bg: #050505; }
+        :root { --gold: #c5a059; --bg: #050505; --white: #ffffff; }
         body { margin: 0; font-family: 'Poppins', sans-serif; background: var(--bg); color: white; overflow-x: hidden; }
 
-        /* LOADING & DOORS */
+        /* FIX SIDE OVERFLOW & DOORS */
         .door { position: fixed; top: 0; width: 50%; height: 100%; background: #111; z-index: 500; transition: 1.5s cubic-bezier(0.7, 0, 0.3, 1); border: 1px solid #222; }
         .left-door { left: 0; border-right: 3px solid var(--gold); }
         .right-door { right: 0; border-left: 3px solid var(--gold); }
         .open .left-door { transform: translateX(-100%); }
         .open .right-door { transform: translateX(100%); }
 
-        /* AUTH BOX */
-        .auth-card { position: fixed; z-index: 510; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(20,20,20,0.9); padding: 40px; border-radius: 20px; border: 1px solid var(--gold); text-align: center; width: 320px; backdrop-filter: blur(10px); }
+        /* AUTH CARD UI FIX */
+        .auth-card { position: fixed; z-index: 510; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(15,15,15,0.95); padding: 30px; border-radius: 20px; border: 1px solid var(--gold); text-align: center; width: 90%; max-width: 320px; backdrop-filter: blur(10px); box-sizing: border-box; }
         .open .auth-card { display: none; }
-        #cap-box { background: #000; color: var(--gold); padding: 10px; margin: 15px 0; letter-spacing: 10px; font-weight: 800; border: 1px dashed var(--gold); font-size: 24px; }
+        #cap-box { background: #000; color: var(--gold); padding: 10px; margin: 15px 0; letter-spacing: 8px; font-weight: 800; border: 1px dashed var(--gold); font-size: 20px; }
 
-        /* GREETING SCREEN */
-        #welcome-screen { position: fixed; top:0; left:0; width:100%; height:100%; display:none; flex-direction:column; align-items:center; justify-content:center; background: #000; z-index: 400; }
-        .greet-text { font-family: 'Orbitron'; font-size: 5vw; color: var(--gold); text-transform: uppercase; letter-spacing: 10px; opacity: 0; transform: translateY(20px); }
+        /* GREETING */
+        #welcome-screen { position: fixed; top:0; left:0; width:100%; height:100%; display:none; flex-direction:column; align-items:center; justify-content:center; background: #000; z-index: 400; text-align: center; }
+        .greet-text { font-family: 'Orbitron'; font-size: 8vw; color: var(--gold); text-transform: uppercase; opacity: 0; }
 
-        /* SIDEBAR (3 LINES) */
-        .menu-btn { position: fixed; top: 25px; left: 25px; z-index: 600; cursor: pointer; display: none; }
+        /* SIDEBAR FIX */
+        .menu-btn { position: fixed; top: 20px; left: 20px; z-index: 600; cursor: pointer; display: none; }
         .open .menu-btn { display: block; }
-        .menu-btn div { width: 30px; height: 3px; background: var(--gold); margin: 6px 0; transition: 0.4s; }
-        .sidebar { position: fixed; left: -300px; top: 0; width: 280px; height: 100%; background: rgba(10,10,10,0.95); z-index: 550; transition: 0.5s; padding: 100px 30px; border-right: 1px solid var(--gold); backdrop-filter: blur(15px); }
+        .sidebar { position: fixed; left: -300px; top: 0; width: 260px; height: 100%; background: #111; z-index: 550; transition: 0.5s; padding: 80px 20px; border-right: 1px solid var(--gold); }
         .sidebar.active { left: 0; }
 
-        /* PORTFOLIO CONTENT */
-        .container { display: none; padding: 100px 20px; max-width: 1000px; margin: 0 auto; position: relative; z-index: 10; }
+        /* GENERATOR FORM */
+        .container { display: none; padding: 80px 15px; max-width: 900px; margin: 0 auto; box-sizing: border-box; }
         .open .container { display: block; }
+        .form-card { background: rgba(20,20,20,0.9); padding: 25px; border-radius: 15px; border: 1px solid #333; margin-bottom: 30px; }
+        
+        input, textarea, select { width: 100%; padding: 12px; margin: 8px 0; background: #000; border: 1px solid #333; color: white; border-radius: 8px; box-sizing: border-box; font-family: 'Poppins'; }
+        .btn { background: var(--gold); color: black; border: none; padding: 15px; border-radius: 8px; font-weight: 800; cursor: pointer; width: 100%; text-transform: uppercase; margin-top: 10px; }
 
-        input, textarea { width: 100%; padding: 12px; margin: 8px 0; background: #111; border: 1px solid #333; color: white; border-radius: 5px; }
-        .btn { background: var(--gold); color: black; border: none; padding: 15px; border-radius: 5px; font-weight: 800; cursor: pointer; width: 100%; text-transform: uppercase; margin-top: 15px; transition: 0.3s; }
-        .btn:hover { background: white; box-shadow: 0 0 20px var(--gold); }
+        /* 2-PAGE PORTFOLIO WRAPPER */
+        .pdf-wrapper { background: #333; padding: 20px 0; display: flex; flex-direction: column; gap: 30px; align-items: center; }
+        .page { background: white; color: #333; width: 210mm; min-height: 297mm; padding: 20mm; box-sizing: border-box; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        
+        .p-header { border-bottom: 5px solid var(--gold); padding-bottom: 20px; display: flex; align-items: center; gap: 30px; }
+        .p-img { width: 180px; height: 180px; border-radius: 50%; border: 4px solid var(--gold); object-fit: cover; }
+        
+        .p-body h2 { border-left: 6px solid var(--gold); padding-left: 15px; text-transform: uppercase; margin-top: 30px; font-size: 20px; }
+        .p-content { line-height: 1.7; font-size: 15px; color: #444; white-space: pre-line; }
+        .page-num { position: absolute; bottom: 10mm; right: 20mm; color: #aaa; font-weight: bold; }
 
-        /* TEMPLATE PAGES */
-        .page { background: white; color: #333; width: 210mm; min-height: 297mm; padding: 20mm; margin: 20px auto; box-shadow: 0 0 40px rgba(0,0,0,0.5); }
-        .cyber-theme { background: #000; color: #00ff00; font-family: 'Orbitron'; border: 3px solid #00ff00; }
+        /* MODERN THEME OVERRIDES */
+        .modern-page { border-top: 15px solid #2c3e50; }
+        .modern-page h2 { border-left-color: #2c3e50; }
     </style>
 </head>
 <body id="master">
 
-    <div class="menu-btn" onclick="toggleSidebar()"><div></div><div></div><div></div></div>
+    <div class="menu-btn" onclick="toggleSidebar()">
+        <div style="width:30px; height:3px; background:var(--gold); margin:6px 0;"></div>
+        <div style="width:30px; height:3px; background:var(--gold); margin:6px 0;"></div>
+        <div style="width:30px; height:3px; background:var(--gold); margin:6px 0;"></div>
+    </div>
     
     <div class="sidebar" id="sidebar">
-        <h2 style="color:var(--gold); border-bottom:1px solid #333; padding-bottom:10px;">DESIGNER HUB</h2>
-        <p style="font-size:12px; color:#666;">Select your vibe:</p>
-        <button class="btn" onclick="setTemp('classic')">Classic Professional</button>
-        <button class="btn" onclick="setTemp('modern')" style="background:#fff;">Modern Creative</button>
-        <button class="btn" onclick="setTemp('cyber')" style="background:#00ff00;">Cyber Matrix</button>
+        <h3 style="color:var(--gold)">CHOOSE VIBE</h3>
+        <button class="btn" onclick="setTheme('classic')">Classic Elite</button>
+        <button class="btn" onclick="setTheme('modern')" style="background:#fff;">Modern Minimal</button>
+        <button class="btn" onclick="setTheme('cyber')" style="background:#00ff00;">Cyber Matrix</button>
     </div>
 
     <div class="door left-door"></div>
     <div class="door right-door"></div>
 
     <div class="auth-card">
-        <h2 style="color:var(--gold); letter-spacing:3px;">IDENTIFY USER</h2>
-        <input type="text" id="username" placeholder="NAME">
+        <h2 style="color:var(--gold); margin:0;">IDENTIFY USER</h2>
+        <input type="text" id="user-in" placeholder="YOUR NAME">
         <div id="cap-box"></div>
-        <input type="text" id="captcha-input" placeholder="ENTER CAPTCHA">
-        <button class="btn" onclick="verify()">INITIALIZE NEXUS ⚡</button>
+        <input type="text" id="cap-in" placeholder="CAPTCHA">
+        <button class="btn" onclick="unlock()">INITIALIZE NEXUS ⚡</button>
     </div>
 
     <div id="welcome-screen">
-        <div class="greet-text" id="greet">WELCOME AGENT</div>
+        <div class="greet-text" id="greet-msg"></div>
     </div>
 
     <div class="container">
-        <div style="background:rgba(20,20,20,0.8); padding:30px; border-radius:15px; border:1px solid #333; backdrop-filter:blur(10px);">
-            <h2 id="mode-text" style="color:var(--gold); margin:0;">MODE: CLASSIC</h2>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-top:20px;">
+        <div class="form-card">
+            <h2 id="theme-label" style="color:var(--gold); margin:0;">MODE: CLASSIC (2-PAGE)</h2>
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:10px; margin-top:15px;">
                 <input type="text" id="fn" placeholder="Full Name">
                 <input type="text" id="fr" placeholder="Current Role">
-                <input type="text" id="fph" placeholder="Phone">
+                <input type="text" id="fph" placeholder="Phone Number">
                 <input type="email" id="fem" placeholder="Email">
                 <input type="text" id="fli" placeholder="LinkedIn URL">
-                <input type="file" id="fimg" onchange="prev(event)">
+                <input type="file" id="fimg" onchange="loadImg(event)">
             </div>
-            <textarea id="fab" rows="3" placeholder="Summary..."></textarea>
-            <textarea id="fpj" rows="5" placeholder="Projects..."></textarea>
-            <button class="btn" onclick="generate()">GENERATE PORTFOLIO ✨</button>
+            <textarea id="fab" rows="3" placeholder="Summary / About Me (Page 1)"></textarea>
+            <textarea id="fpj" rows="4" placeholder="Main Projects (Page 1)"></textarea>
+            
+            <div id="custom-sections" style="margin-top:20px; border-top:1px solid #333; padding-top:15px;">
+                <h4 style="color:var(--gold)">ADD CUSTOM SECTION (For Page 2)</h4>
+                <input type="text" id="custom-title" placeholder="Section Title (e.g. Certifications)">
+                <textarea id="custom-desc" rows="3" placeholder="Section Details..."></textarea>
+                <button class="btn" onclick="addSection()" style="background:#444; color:white;">+ Add Section to Page 2</button>
+                <div id="added-list" style="font-size:12px; margin-top:10px; color:#888;"></div>
+            </div>
+
+            <button class="btn" onclick="build()" style="margin-top:30px;">GENERATE 2-PAGE PORTFOLIO ✨</button>
         </div>
 
-        <div id="res-ui" style="display:none; margin-top:50px;">
-            <div id="pdf-area" style="background:#222; padding:20px;">
-                <div id="page1" class="page">
-                    <div style="display:flex; align-items:center; gap:30px; border-bottom:4px solid var(--gold); padding-bottom:20px;">
-                        <img id="res-img" style="width:180px; height:180px; border-radius:50%; object-fit:cover; border:3px solid var(--gold);">
+        <div id="result-ui" style="display:none;">
+            <div id="pdf-root" class="pdf-wrapper">
+                <div id="p1" class="page">
+                    <div class="p-header">
+                        <img id="res-img" class="p-img">
                         <div>
-                            <h1 id="res-name" style="margin:0; font-size:40px;"></h1>
-                            <p id="res-role" style="font-weight:bold; color:var(--gold);"></p>
+                            <h1 id="res-name" style="margin:0; font-size:35px;"></h1>
+                            <p id="res-role" style="color:var(--gold); font-weight:bold;"></p>
+                            <p id="res-contacts" style="font-size:12px; color:#666;"></p>
                         </div>
                     </div>
-                    <h2>CONTACT</h2>
-                    <p id="res-contact"></p>
-                    <h2>ABOUT</h2>
-                    <p id="res-ab" style="line-height:1.6;"></p>
-                    <h2>PROJECTS</h2>
-                    <p id="res-pj" style="white-space:pre-line; line-height:1.6;"></p>
+                    <div class="p-body">
+                        <h2>Professional Summary</h2>
+                        <p id="res-ab" class="p-content"></p>
+                        <h2>Key Projects</h2>
+                        <p id="res-pj" class="p-content"></p>
+                    </div>
+                    <div class="page-num">PAGE 01</div>
+                </div>
+
+                <div id="p2" class="page">
+                    <div id="res-custom" class="p-body">
+                        <h2>Technical Skills</h2>
+                        <p class="p-content">Languages: Python, Java, C++<br>Web: HTML, CSS, JavaScript<br>Tools: Git, VS Code</p>
+                    </div>
+                    <div class="page-num">PAGE 02</div>
                 </div>
             </div>
-            <button class="btn" onclick="save()" style="background:#2ecc71; margin-bottom:100px;">DOWNLOAD 2-PAGE PDF 📄</button>
+            <button class="btn" onclick="download()" style="background:#2ecc71; margin-bottom:50px;">DOWNLOAD PROFESSIONAL PDF 📄</button>
         </div>
     </div>
 
     <script>
         let code = Math.random().toString(36).substring(2, 7).toUpperCase();
         document.getElementById('cap-box').innerText = code;
-        let theme = 'classic';
+        let selectedTheme = 'classic';
+        let customData = [];
 
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
-        function setTemp(t) { theme = t; document.getElementById('mode-text').innerText = "MODE: " + t.toUpperCase(); toggleSidebar(); }
+        function setTheme(t) { selectedTheme = t; document.getElementById('theme-label').innerText = "MODE: " + t.toUpperCase(); toggleSidebar(); }
 
-        function verify() {
-            const name = document.getElementById('username').value;
-            const cap = document.getElementById('captcha-input').value.toUpperCase();
-            if(name && cap === code) {
+        function unlock() {
+            const name = document.getElementById('user-in').value;
+            if(name && document.getElementById('cap-in').value.toUpperCase() === code) {
                 document.getElementById('master').classList.add('open');
-                showWelcome(name);
-            } else { alert("Verification Failed!"); }
+                const screen = document.getElementById('welcome-screen');
+                screen.style.display = 'flex';
+                const msg = document.getElementById('greet-msg');
+                msg.innerText = "WELCOME " + name.toUpperCase();
+                msg.style.opacity = 1;
+                setTimeout(() => { screen.style.opacity = 0; setTimeout(() => screen.style.display = 'none', 1000); }, 2500);
+            } else { alert("Failed! Check Name & Captcha."); }
         }
 
-        function showWelcome(name) {
-            const screen = document.getElementById('welcome-screen');
-            const greet = document.getElementById('greet');
-            screen.style.display = 'flex';
-            greet.innerText = "WELCOME " + name.toUpperCase();
-            
-            // Animation sequence
-            setTimeout(() => { 
-                greet.style.transition = "2s";
-                greet.style.opacity = "1";
-                greet.style.transform = "translateY(0)";
-            }, 500);
-
-            setTimeout(() => { 
-                screen.style.transition = "1s";
-                screen.style.opacity = "0";
-                setTimeout(() => screen.style.display = 'none', 1000);
-            }, 3000);
+        function addSection() {
+            const t = document.getElementById('custom-title').value;
+            const d = document.getElementById('custom-desc').value;
+            if(t && d) {
+                customData.push({title: t, desc: d});
+                document.getElementById('added-list').innerText += ` [${t}] added!`;
+                document.getElementById('custom-title').value = '';
+                document.getElementById('custom-desc').value = '';
+            }
         }
 
-        let iData = "";
-        function prev(e) {
+        let imgData = "";
+        function loadImg(e) {
             const r = new FileReader();
-            r.onload = () => iData = r.result;
+            r.onload = () => imgData = r.result;
             r.readAsDataURL(e.target.files[0]);
         }
 
-        function generate() {
-            const p = document.getElementById('page1');
-            p.className = "page " + theme + "-theme";
+        function build() {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(p => p.className = "page " + (selectedTheme === 'modern' ? 'modern-page' : selectedTheme === 'cyber' ? 'cyber-theme' : ''));
+            
             document.getElementById('res-name').innerText = document.getElementById('fn').value.toUpperCase();
             document.getElementById('res-role').innerText = document.getElementById('fr').value;
-            document.getElementById('res-contact').innerText = `📞 ${document.getElementById('fph').value} | 📧 ${document.getElementById('fem').value} | 🔗 ${document.getElementById('fli').value}`;
+            document.getElementById('res-contacts').innerText = `${document.getElementById('fph').value} | ${document.getElementById('fem').value} | ${document.getElementById('fli').value}`;
             document.getElementById('res-ab').innerText = document.getElementById('fab').value;
             document.getElementById('res-pj').innerText = document.getElementById('fpj').value;
-            if(iData) document.getElementById('res-img').src = iData;
-            document.getElementById('res-ui').style.display = 'block';
+            if(imgData) document.getElementById('res-img').src = imgData;
+
+            const customBox = document.getElementById('res-custom');
+            customBox.innerHTML = ""; // Reset Page 2
+            customData.forEach(item => {
+                customBox.innerHTML += `<h2>${item.title}</h2><p class="p-content">${item.desc}</p>`;
+            });
+            // Re-add default skills if Page 2 is empty
+            if(customData.length === 0) customBox.innerHTML = `<h2>Technical Skills</h2><p class="p-content">Edit Page 2 by adding custom sections!</p>`;
+
+            document.getElementById('result-ui').style.display = 'block';
+            window.scrollTo(0, document.body.scrollHeight);
         }
 
-        function save() {
-            const e = document.getElementById('pdf-area');
-            html2pdf().from(e).save('Portfolio_Elite.pdf');
+        function download() {
+            const element = document.getElementById('pdf-root');
+            const opt = { margin: 0, filename: 'Professional_Portfolio.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
+            html2pdf().set(opt).from(element).save();
         }
     </script>
 </body>
